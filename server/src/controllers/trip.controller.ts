@@ -30,31 +30,40 @@ export async function createTrip(req: AuthRequest, res: Response) {
 
 export async function getTrips(req: AuthRequest, res: Response) {
   try {
-    if (!req.user) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
 
-    const trips = await Trip.find({ createdBy: req.user.id }).sort({ createdAt: -1 });
+    const trips = await Trip.find()
+      .sort({ createdAt: -1 });
+
     res.json(trips);
+
   } catch (error: any) {
-    res.status(500).json({ message: error.message || 'Server Error' });
+
+    res.status(500).json({
+      message: error.message || 'Server Error'
+    });
+
   }
 }
 
 export async function getTripById(req: AuthRequest, res: Response) {
   try {
-    if (!req.user) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
 
-    const trip = await Trip.findOne({ _id: req.params.id, createdBy: req.user.id });
+    const trip = await Trip.findById(req.params.id);
+
     if (!trip) {
-      return res.status(404).json({ message: 'Trip not found' });
+      return res.status(404).json({
+        message: 'Trip not found'
+      });
     }
 
     res.json(trip);
+
   } catch (error: any) {
-    res.status(500).json({ message: error.message || 'Server Error' });
+
+    res.status(500).json({
+      message: error.message || 'Server Error'
+    });
+
   }
 }
 

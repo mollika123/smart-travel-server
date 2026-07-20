@@ -1,19 +1,29 @@
 import { Router } from 'express';
-import { createTrip, getTrips, getTripById, updateTrip, deleteTrip } from '../controllers/trip.controller';
+import { 
+  createTrip, 
+  getTrips, 
+  getTripById, 
+  updateTrip, 
+  deleteTrip 
+} from '../controllers/trip.controller';
+
 import { authMiddleware } from '../middleware/auth';
 
 const router = Router();
 
-// Apply auth middleware to all trip routes
-router.use(authMiddleware);
 
-// /api/trips
-router.post('/', createTrip);
-router.get('/', getTrips);
-
-// /api/trips/:id
+// Public route (আগে)
 router.get('/:id', getTripById);
-router.put('/:id', updateTrip);
-router.delete('/:id', deleteTrip);
+
+router.get('/', getTrips);
+// Protected routes
+router.post('/', authMiddleware, createTrip);
+
+
+
+router.put('/:id', authMiddleware, updateTrip);
+
+router.delete('/:id', authMiddleware, deleteTrip);
+
 
 export default router;
